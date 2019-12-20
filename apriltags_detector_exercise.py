@@ -30,6 +30,12 @@ DOWN = [-0.44, 0]
 RIGHT = [0.35, -1]
 LEFT =[0.35, +1]
 
+X = 3.5
+y = 5.9
+angle = (np.pi/2)
+tag_size = 0.18
+tile_size = 0.585
+
 
 
 # from experiments.utils import save_img
@@ -171,6 +177,26 @@ def _draw_pose(overlay, camera_params, tag_size, pose, z_sign=1):
     ipoints = [tuple(pt) for pt in ipoints.reshape(-1, 2)]
     for i, j in edges:
         cv2.line(overlay, ipoints[i], ipoints[j], (0, 255, 0), 1, 16)
+
+
+
+# Calcula la pose del apriltag
+def process_april_tag(pose):
+    ## Aquí jugar
+    ## pose es tag con respecto al robot
+    ## T_a es la transformación del april tag con respecto al mapa
+    T_a_m = tf.translation_matrix([-X * tile_size, -tag_size * 3/4, y*tile_size])
+    R_a = tf.euler_matrix(0, angle, 0)
+
+
+    ## Aquí dando vuelta el robot, por cuenta del cambio de los angulos
+    T_r_a = np.dot(pose, tf.euler_matrix(0, np.pi, 0))
+    T_a_r = np.linalg.inv(T_r_a)
+
+    # Posicion del robot con respecto al apriltag
+    T_a_r = np.dot(T_a_r, pose)
+    print(T_a_r)
+
 
 def global_pose(matrix,x_ob,y_ob,angle):
     #obtiene el angulo del tag con respecto al mapa
