@@ -281,9 +281,9 @@ def update(dt):
 
 
     for detection in detections:
-        pose, e0, e1 = detector.detection_pose(detection, camera, 0.18 / 2 *0.585 )
+        pose, e0, e1 = detector.detection_pose(detection, camera, tag_size/2 )
         if not np.isnan(pose[0][0]):
-            _draw_pose(cv_img,camera, 0.18/ 2 *0.585,pose)
+            _draw_pose(cv_img,camera, tag_size/2,pose)
 
         robot_pose = global_pose(pose,2.08*0.585, 4.05*0.585, math.pi/2 )
         label2 = "Coordenadas robot" % (robot_pose)
